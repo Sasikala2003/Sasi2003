@@ -1,0 +1,50 @@
+import pytesseract
+from PIL import Image
+from playsound import playsound
+import pyttsx3
+
+# Path to the Tesseract executable (update to your installation path)
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+# Path to your image and sound files
+image_path = 'forest.jpg'
+sound_path = 'forest_sound.mp3'
+
+# Perform OCR on the image
+def ocr_image(image_path):
+    try:
+        img = Image.open(image_path)
+        text = pytesseract.image_to_string(img)
+        return text
+    except Exception as e:
+        print(f"Error during OCR: {e}")
+        return None
+
+# Read and display OCR text
+ocr_text = ocr_image(image_path)
+if ocr_text:
+    print("OCR Text:")
+    print(ocr_text)
+
+# Play background sound
+def play_background_sound(sound_path):
+    try:
+        playsound(sound_path)
+    except Exception as e:
+        print(f"Error playing sound: {e}")
+
+# Create text-to-speech from OCR text
+def text_to_speech(text):
+    try:
+        engine = pyttsx3.init()
+        engine.setProperty('rate', 150)  # Adjust speech rate as needed
+        engine.say(text)
+        engine.runAndWait()
+    except Exception as e:
+        print(f"Error during text-to-speech: {e}")
+
+# Play background sound while reading OCR text
+if ocr_text:
+    play_background_sound(sound_path)
+    text_to_speech(ocr_text)
+
